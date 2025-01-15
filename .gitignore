@@ -1,0 +1,76 @@
+# Compiled Python files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Temp files
+temp
+
+# Cython files
+*.c
+*.so
+
+# Virtual environment
+.env/
+.venv/
+env/
+venv/
+
+# Pip dependency files
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.eggs/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# PyCharm
+.idea/*
+*.iml
+
+# Exception: Don't ignore the icon file
+!.idea/icon.svg
+
+# VSCode
+.vscode/
+
+# Secrets or config files
+*.env
+*.key
+*.pem
+config.json
+settings.py  # If you use sensitive info here, avoid adding it
+
+# pytest
+.pytest_cache/
+
+# Coverage reports
+.coverage
+coverage.xml
+htmlcov/
+
+# Log files
+*.log
+logs/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Anki decks (if auto-generated in your project)
+*.apkg
