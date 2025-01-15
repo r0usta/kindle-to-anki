@@ -1,16 +1,20 @@
-# This is a sample Python script.
+from dotenv import load_dotenv
+import os
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+load_dotenv()
 
+dict_default_path = "./dict.azw"
+vocab_default_path = "./vocab.db"
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+dict_path = os.getenv("DICT_PATH", default=dict_default_path)
+vocab_path = os.getenv("VOCAB_PATH", default=vocab_default_path)
 
+if not os.path.exists(dict_path):
+    print(f"Dictionary path does not exist. Using default: {dict_default_path}")
+    dict_path = dict_default_path
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+if not os.path.exists(vocab_path):
+    print(f"Vocabulary path does not exist. Using default: {vocab_default_path}")
+    vocab_path = vocab_default_path
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+# ! if __name__ == '__main__':
