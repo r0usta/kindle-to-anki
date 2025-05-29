@@ -40,7 +40,7 @@ def fetch_filtered_data():
     seen = set()
     filtered_data = []
     for word, usage in data:
-        word_clean = word[3:].lower()  # Remove first 3 characters & lowercase
+        word_clean = word[3:].lower()
         if word_clean not in seen:
             seen.add(word_clean)
             filtered_data.append((word_clean, usage))
@@ -54,7 +54,7 @@ def download_audio(word, audio_url, folder="audio"):
         print(f"❌ No audio found for {word}")
         return
 
-    os.makedirs(folder, exist_ok=True)  # Create folder if it doesn't exist
+    os.makedirs(folder, exist_ok=True)
     file_path = os.path.join(folder, f"{word}.mp3")
 
     try:
@@ -67,7 +67,7 @@ def download_audio(word, audio_url, folder="audio"):
         else:
             print(f"❌ Failed to download audio for {word} (Status: {response.status_code})")
     except Exception as e:
-        print(f"❌ Error downloading {word}: {e}")
+        print(f"❌ Error downloading audio for {word}: {e}")
 
 
 def fallback_translate_with_deepl(word):
