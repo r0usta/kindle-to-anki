@@ -7,6 +7,12 @@ __pycache__/
 # Temp files
 temp
 
+# Translations files
+translations
+
+# Audio files
+audio
+
 # Cython files
 *.c
 *.so
