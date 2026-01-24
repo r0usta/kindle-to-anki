@@ -31,7 +31,6 @@ if not os.path.exists(vocab_path):
 
 
 def fetch_filtered_data():
-    """Fetches unique words and their usage from the database."""
     connection = sqlite3.connect(vocab_path)
     cursor = connection.cursor()
     res = cursor.execute("SELECT word_key, usage FROM LOOKUPS;")
@@ -49,7 +48,6 @@ def fetch_filtered_data():
 
 
 def download_audio(word, audio_url, folder="audio"):
-    """Downloads the pronunciation audio file if available."""
     if not audio_url:
         print(f"❌ No audio found for {word}")
         return
@@ -71,7 +69,6 @@ def download_audio(word, audio_url, folder="audio"):
 
 
 def fallback_translate_with_deepl(word):
-    """Translates a word using DeepL if Lingea fails."""
     try:
         result = deepl_translator.translate_text(word, source_lang="EN", target_lang="CS")
         return {
@@ -117,7 +114,6 @@ def fetch_translations(filtered_data, limit=None):
 
 
 def save_translations_to_file(translations):
-    """Saves translations to a timestamped JSON file inside the 'translations' folder."""
     os.makedirs("translations", exist_ok=True)
     timestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
     filename = f"translations/{timestamp}.json"

@@ -8,7 +8,6 @@ class LingeaScraper:
         self.headers = {"User-Agent": "Mozilla/5.0"}
 
     def get_word_data(self, word):
-        """Fetches word data from Lingea dictionary."""
         url = f"{self.BASE_URL}{word}"
 
         try:
@@ -32,7 +31,6 @@ class LingeaScraper:
 
     @staticmethod
     def extract_translation(tr):
-        """Extracts translation text from a table row."""
         translation_td = tr.select_one("td span.lex_ful_tran.w.l2")
         description_td = tr.select_one("td span.lex_ful_desc2.w.l2")
 
@@ -44,7 +42,6 @@ class LingeaScraper:
 class LingeaParser:
     @staticmethod
     def parse_entry(soup):
-        """Parses the HTML and extracts word data."""
         word = LingeaParser.get_word(soup)
         pronunciation = LingeaParser.get_pronunciation(soup)
         pronunciation_audio = LingeaParser.get_pronunciation_audio(soup)  # New function
@@ -61,7 +58,6 @@ class LingeaParser:
 
     @staticmethod
     def get_pronunciation_audio(soup):
-        """Extracts the pronunciation audio URL."""
         audio_element = soup.select_one("span.lex_ful_wsnd")
 
         sid = audio_element.get_text(strip=True) if audio_element else None
@@ -73,19 +69,16 @@ class LingeaParser:
 
     @staticmethod
     def get_word(soup):
-        """Extracts the word."""
         word = soup.select_one("h1.lex_ful_entr")
         return word.get_text(strip=True) if word else None
 
     @staticmethod
     def get_pronunciation(soup):
-        """Extracts pronunciation."""
         pronunciation = soup.select_one("span.lex_ful_pron")
         return pronunciation.get_text(strip=True) if pronunciation else None
 
     @staticmethod
     def get_definitions(soup):
-        """Extracts unique translations without duplicates."""
         definitions = []
         seen_translations = set()  # Track unique translations
 
@@ -102,7 +95,6 @@ class LingeaParser:
 
     @staticmethod
     def get_phrases(soup):
-        """Extracts idioms and phrases."""
         phrases = []
         phrase_rows = soup.select("tr")
 
