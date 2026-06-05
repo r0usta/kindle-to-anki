@@ -2,10 +2,12 @@ import json
 import sqlite3
 import time
 import os
+
 import deepl
+from dotenv import load_dotenv
 
 from modules.lingea_api import LingeaScraper
-from dotenv import load_dotenv
+from modules.kindle_to_apkg import build_apkg
 
 load_dotenv()
 
@@ -108,12 +110,14 @@ def save_translations_to_file(translations, book_title):
     os.makedirs("translations", exist_ok=True)
     timestamp = time.strftime("%Y-%m-%d")
     book_title = book_title.lower().replace(" ", "_")
-    filename = f"translations/{book_title}+{timestamp}.json"
+    filename = f"{book_title}+{timestamp}.json"
 
-    with open(filename, "w", encoding="utf-8") as f:
+    with open(f"translations/{filename}", "w", encoding="utf-8") as f:
         json.dump(translations, f, indent=4, ensure_ascii=False)
 
     print(f"📁 Translations saved to '{filename}'")
+
+    return filename
 
 
 def get_latest_export(book_title, folder = "./translations") -> str | None:
@@ -178,10 +182,12 @@ def main():
 
 
     filtered_data = filter_raw_words(raw_words, list(existing_vocab.keys()))
-    translations = fetch_translations(filtered_data, selected_book[1], limit=10)
+    translations = fetch_translations(filtered_data, selected_book[1], limit=1)
 
     existing_vocab.update(translations)
-    save_translations_to_file(existing_vocab, book_title=selected_book[1])
+    translations_name = save_translations_to_file(existing_vocab, book_title=selected_book[1])
+
+    build_apkg(translations_name)
 
 
 if __name__ == '__main__':
