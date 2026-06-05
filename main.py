@@ -22,15 +22,10 @@ if not os.path.exists(vocab_path):
     vocab_path = vocab_default_path
 
 
-def fetch_filtered_data():
-    connection = sqlite3.connect(vocab_path)
-    cursor = connection.cursor()
-    res = cursor.execute("SELECT word_key, usage FROM LOOKUPS;")
-    data = res.fetchall()
-
-    seen = set()
+def filter_raw_words(data, previous_translations):
+    seen = set(previous_translations)
     filtered_data = []
-    for word, usage in data:
+    for word, usage, _ in data:
         word_clean = word[3:].lower()
         if word_clean not in seen:
             seen.add(word_clean)
