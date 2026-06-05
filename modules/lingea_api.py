@@ -5,7 +5,19 @@ class LingeaScraper:
     BASE_URL = "https://slovniky.lingea.cz/anglicko-cesky/"
 
     def __init__(self):
-        self.headers = {"User-Agent": "Mozilla/5.0"}
+        self.headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/118.0.5993.90 Safari/537.36"
+            ),
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Connection": "keep-alive",
+        }
+
+    def try_get_audio(self, audio_url):
+        return requests.get(audio_url, headers=self.headers, stream=True)
 
     def get_word_data(self, word):
         url = f"{self.BASE_URL}{word}"
