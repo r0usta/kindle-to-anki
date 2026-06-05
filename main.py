@@ -4,26 +4,18 @@ import time
 import os
 import deepl
 
-import requests
-
 from modules.lingea_api import LingeaScraper
 from dotenv import load_dotenv
 
 load_dotenv()
 
-dict_default_path = "./dict.azw"
 vocab_default_path = "./vocab.db"
 deepl_api_key = None
 
-dict_path = os.getenv("DICT_PATH", default=dict_default_path)
 vocab_path = os.getenv("VOCAB_PATH", default=vocab_default_path)
 deepl_api_key = os.getenv("DEEPL_API_KEY", default=deepl_api_key)
 
 deepl_translator = deepl.Translator(deepl_api_key)
-
-if not os.path.exists(dict_path):
-    print(f"Dictionary path does not exist. Using default: {dict_default_path}")
-    dict_path = dict_default_path
 
 if not os.path.exists(vocab_path):
     print(f"Vocabulary path does not exist. Using default: {vocab_default_path}")
