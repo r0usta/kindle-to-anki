@@ -151,7 +151,9 @@ def main():
     print(f"Found {len(raw_words)} words in {selected_book[1]} from {dates[0]} to {dates[-1]}.")
     print(f"Here is last {min(7, len(dates))} dates:", dates[-7:])
 
-    selected_date = input(f"Select date [{dates[0]} - {dates[-1]}]: ")
+    selected_date = input(f"Select date (Enter to skip) [{dates[0]} - {dates[-1]}]: ").strip()
+    if not selected_date:
+        selected_date = dates[0]  # oldest = include all words
     selected_timestamp = time.mktime(time.strptime(selected_date, "%Y-%m-%d")) * 1000
 
     # Filter by date in Python since raw_words is already loaded
