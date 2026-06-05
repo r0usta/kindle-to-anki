@@ -125,14 +125,60 @@ def get_latest_export(book_title, folder = "./translations") -> str | None:
     return sorted(matches, reverse=True)[0]
 
 def main():
-    # Fetch and filter data from database
-    filtered_data = fetch_filtered_data()
+    connection = sqlite3.connect(vocab_path)
+    cursor = connection.cursor()
 
-    # Fetch translations for filtered words
-    translations = fetch_translations(filtered_data, 5)
+    books = cursor.execute("SELECT id, title, lang FROM BOOK_INFO;").fetchall()
 
-    # Save translations to file
-    save_translations_to_file(translations)
+    for i, book in enumerate(books):
+        print(f"{i + 1}. {book[1]} ({book[2]})")
+
+    selected_index = int(input("Select book: ")) - 1
+    selected_book = books[selected_index]
+
+    raw_words = cursor.execute("""
+        SELECT word_key, usage, timestamp 
+        FROM LOOKUPS 
+        WHERE book_key = ? 
+        ORDER BY timestamp ASC;
+    """, (selected_book[0],)).fetchall()
+
+    connection.close()
+
+    dates = sorted(set(
+        time.strftime("%Y-%m-%d", time.localtime(row[2] / 1000)) for row in raw_words
+    ))
+    print(f"Found {len(raw_words)} words in {selected_book[1]} from {dates[0]} to {dates[-1]}.")
+    print(f"Here is last {min(7, len(dates))} dates:", dates[-7:])
+
+    selected_date = input(f"Select date [{dates[0]} - {dates[-1]}]: ")
+    selected_timestamp = time.mktime(time.strptime(selected_date, "%Y-%m-%d")) * 1000
+
+    # Filter by date in Python since raw_words is already loaded
+    raw_words = [row for row in raw_words if row[2] >= selected_timestamp]
+
+    if not raw_words:
+        print("No words found from the selected date.")
+        return
+
+    print(f"Filtered to {len(raw_words)} words from {selected_date}.")
+
+    latest_export = get_latest_export(selected_book[1])
+    existing_vocab = {}
+
+    if not latest_export:
+        print("No previous export found.")
+    else:
+        with open(os.path.join("translations", latest_export), "r", encoding="utf-8") as f:
+            existing_vocab = json.load(f)
+        print(f"Loaded latest existing vocabulary with {len(existing_vocab)} words: {latest_export}")
+
+
+    filtered_data = filter_raw_words(raw_words, list(existing_vocab.keys()))
+    translations = fetch_translations(filtered_data, limit=10)
+
+    existing_vocab.update(translations)
+    save_translations_to_file(existing_vocab, book_title=selected_book[1])
 
 
 if __name__ == '__main__':
