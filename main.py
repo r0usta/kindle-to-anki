@@ -74,8 +74,11 @@ def fetch_translations(filtered_data, limit=None):
     scraper = LingeaScraper()
     translations = {}
 
-    for i, (word, usage) in enumerate(filtered_data, start=1):
-        print(f"[{i}/{len(filtered_data)}] Fetching: {word}...")
+    if not limit:
+        limit = len(filtered_data)
+
+    for i, (word, usage) in enumerate(filtered_data[0:limit], start=1):
+        print(f"[{i}/{limit}] Fetching: {word}...")
         word_data = scraper.get_word_data(word)
 
         if not word_data:
@@ -86,7 +89,7 @@ def fetch_translations(filtered_data, limit=None):
             print(f"  ✔ Successfully fetched: {word}")
             audio_url = word_data.get("audio_url")
             if audio_url:
-                download_audio(word, audio_url)
+                download_audio(scraper, word, audio_url)
 
             translations[word] = {
                 "translation": word_data,
