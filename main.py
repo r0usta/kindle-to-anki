@@ -34,7 +34,7 @@ def filter_raw_words(data, previous_translations):
     return filtered_data
 
 
-def download_audio(word, audio_url, folder="audio"):
+def download_audio(scraper, word, audio_url, folder="audio"):
     if not audio_url:
         print(f"❌ No audio found for {word}")
         return
@@ -43,7 +43,7 @@ def download_audio(word, audio_url, folder="audio"):
     file_path = os.path.join(folder, f"{word}.mp3")
 
     try:
-        response = requests.get(audio_url, stream=True)
+        response = scraper.try_get_audio(audio_url)
         if response.status_code == 200:
             with open(file_path, "wb") as f:
                 for chunk in response.iter_content(1024):
