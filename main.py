@@ -34,11 +34,12 @@ def filter_raw_words(data, previous_translations):
     return filtered_data
 
 
-def download_audio(scraper, word, audio_url, folder="audio"):
+def download_audio(scraper, word, audio_url, book_name):
     if not audio_url:
         print(f"❌ No audio found for {word}")
         return
 
+    folder = f"audio/{book_name.lower().replace(" ", "_")}"
     os.makedirs(folder, exist_ok=True)
     file_path = os.path.join(folder, f"{word}.mp3")
 
@@ -70,7 +71,7 @@ def fallback_translate_with_deepl(word):
         return None
 
 
-def fetch_translations(filtered_data, limit=None):
+def fetch_translations(filtered_data, book_name, limit=None):
     scraper = LingeaScraper()
     translations = {}
 
@@ -89,7 +90,7 @@ def fetch_translations(filtered_data, limit=None):
             print(f"  ✔ Successfully fetched: {word}")
             audio_url = word_data.get("audio_url")
             if audio_url:
-                download_audio(scraper, word, audio_url)
+                download_audio(scraper, word, audio_url, book_name)
 
             translations[word] = {
                 "translation": word_data,
@@ -177,7 +178,7 @@ def main():
 
 
     filtered_data = filter_raw_words(raw_words, list(existing_vocab.keys()))
-    translations = fetch_translations(filtered_data, limit=10)
+    translations = fetch_translations(filtered_data, selected_book[1], limit=10)
 
     existing_vocab.update(translations)
     save_translations_to_file(existing_vocab, book_title=selected_book[1])
