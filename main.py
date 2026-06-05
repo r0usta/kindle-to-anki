@@ -103,16 +103,26 @@ def fetch_translations(filtered_data, limit=None):
     return translations
 
 
-def save_translations_to_file(translations):
+def save_translations_to_file(translations, book_title):
     os.makedirs("translations", exist_ok=True)
-    timestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
-    filename = f"translations/{timestamp}.json"
+    timestamp = time.strftime("%Y-%m-%d")
+    book_title = book_title.lower().replace(" ", "_")
+    filename = f"translations/{book_title}+{timestamp}.json"
 
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(translations, f, indent=4, ensure_ascii=False)
 
     print(f"📁 Translations saved to '{filename}'")
 
+
+def get_latest_export(book_title, folder = "./translations") -> str | None:
+    prefix = book_title.replace(" ", "_").lower()
+    matches = [f for f in os.listdir(folder) if f.startswith(prefix)]
+
+    if not matches:
+        return None
+
+    return sorted(matches, reverse=True)[0]
 
 def main():
     # Fetch and filter data from database
