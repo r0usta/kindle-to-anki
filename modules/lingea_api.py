@@ -2,6 +2,17 @@ import requests
 from bs4 import BeautifulSoup
 
 class LingeaScraper:
+    """
+    Represents a web scraper for fetching and processing dictionary data from the Lingea website.
+
+    Provides functionality to retrieve word data, process it, and extract translations or descriptions.
+    This class serves as a utility for parsing entries from the online English-Czech dictionary.
+
+    This tool scrapes Lingea for personal, non-commercial use. Please respect their ToS and rate limit your requests.
+
+    :ivar BASE_URL: Base URL for the Lingea English-Czech dictionary.
+    :type BASE_URL: str
+    """
     BASE_URL = "https://slovniky.lingea.cz/anglicko-cesky/"
 
     def __init__(self):
